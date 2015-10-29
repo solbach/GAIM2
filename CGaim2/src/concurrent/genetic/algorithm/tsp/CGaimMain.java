@@ -50,25 +50,15 @@ public class CGaimMain {
         /* Create Islands */
         for(int i = 0; i < numberIslands; i++)
         {
-        	CGaimIsland island = new CGaimIsland(nMigrants, popSize, epochL, i+1);
+        	CGaimIsland island = new CGaimIsland(pool, nMigrants, popSize, epochL, i+1);
         	islands.add(island);
         }
         
-        /* Initialize Islands */
+        /* Start the Threads */
         for(int i = 0; i < numberIslands; i++)
-        {
-        	islands.get(i).init(pool);
+        { 
+        	islands.get(i).start();        	
         } 
-        
-        
-        /* Evolve Islands */
-        for(int i = 0; i < numberIslands; i++)
-        {
-        	islands.get(i).evolve();
-        } 
-        
-        
-        
         
         
         

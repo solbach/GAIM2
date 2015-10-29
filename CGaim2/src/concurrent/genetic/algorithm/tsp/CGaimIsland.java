@@ -3,8 +3,13 @@ package concurrent.genetic.algorithm.tsp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CGaimIsland {
+public class CGaimIsland implements Runnable {
 	
+	private Thread t;
+	
+	boolean initialized = false;
+	
+	private CGaimDestinationPool pool;
 	private CGaimPopulation population;
 	private CGaim evolution;
 	
@@ -16,23 +21,29 @@ public class CGaimIsland {
 	private int id = 0;
 	
 	
-	public CGaimIsland(int nMigrants, int popSize, int epochL, int id)
+	public CGaimIsland(CGaimDestinationPool pool, int nMigrants, int popSize, int epochL, int id)
 	{
+		this.pool = pool;
 		this.numberMigrants = nMigrants;
 		this.popSize = popSize;
 		this.epochL = epochL;
 		this.id = id;
 	}
 	
-	public boolean init(CGaimDestinationPool pool)
+	public void init()
 	{
-		/* Initialize Population */
-		this.population = new CGaimPopulation(this.popSize, true);
-		
-		/* Initialize Evolution Logic */
-		this.evolution = new CGaim();
-		
-		return false;
+		try{			
+			/* Initialize Population */
+			this.population = new CGaimPopulation(this.popSize, true);
+						
+			/* Initialize Evolution Logic */
+			this.evolution = new CGaim();
+			this.initialized = true;
+		}catch(IndexOutOfBoundsException e)
+		{
+			this.initialized = false;
+			//System.err.println(e.getMessage());			
+		}
 	}
 	
 	public boolean evolve()
@@ -60,5 +71,26 @@ public class CGaimIsland {
 	public void migration()
 	{
 		
+	}
+
+	@Override
+	public void run() {
+		/* If the Island is not already initialized - do it */
+		if(this.initialized == false)
+		{
+			this.init();
+		}
+		
+		/* evolve */
+		this.evolve();
+		
+	}
+
+	public void start() {
+		System.out.println("Starting Island" + this.id);
+		if (t == null) {
+			t = new Thread (this);
+			t.start();
+		}
 	}
 }
