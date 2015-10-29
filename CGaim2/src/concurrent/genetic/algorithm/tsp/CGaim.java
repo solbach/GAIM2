@@ -3,12 +3,12 @@ package concurrent.genetic.algorithm.tsp;
 public class CGaim {
 
     /* GA parameters */
-    private static final double mutationRate = 0.015;
-    private static final int tournamentSize = 5;
-    private static final boolean elitism = true;
+    private  final double mutationRate = 0.015;
+    private  final int tournamentSize = 5;
+    private  final boolean elitism = true;
 
     // Evolves a population over one generation
-    public static CGaimPopulation evolvePopulation(CGaimPopulation pop) {
+    public  CGaimPopulation evolvePopulation(CGaimPopulation pop) {
     	CGaimPopulation newPopulation = new CGaimPopulation(pop.populationSize(), false);
 
         // Keep our best individual if elitism is enabled
@@ -40,7 +40,7 @@ public class CGaim {
     }
 
     // Applies crossover to a set of parents and creates offspring
-    public static CGaimConnection crossover(CGaimConnection parent1, CGaimConnection parent2) {
+    public  CGaimConnection crossover(CGaimConnection parent1, CGaimConnection parent2) {
         // Create new child tour
     	CGaimConnection child = new CGaimConnection();
 
@@ -79,7 +79,7 @@ public class CGaim {
     }
 
     // Mutate a tour using swap mutation
-    private static void mutate(CGaimConnection tour) {
+    private  void mutate(CGaimConnection tour) {
         // Loop through tour cities
         for(int tourPos1=0; tourPos1 < tour.tourSize(); tourPos1++){
             // Apply mutation rate
@@ -99,7 +99,7 @@ public class CGaim {
     }
 
     // Selects candidate tour for crossover
-    private static CGaimConnection tournamentSelection(CGaimPopulation pop) {
+    private  CGaimConnection tournamentSelection(CGaimPopulation pop) {
         // Create a tournament population
         CGaimPopulation tournament = new CGaimPopulation(tournamentSize, false);
         // For each place in the tournament get a random candidate tour and

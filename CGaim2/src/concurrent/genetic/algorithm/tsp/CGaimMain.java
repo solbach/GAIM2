@@ -1,9 +1,13 @@
 package concurrent.genetic.algorithm.tsp;
 
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CGaimMain {
-
+	
+	private List<CGaimPopulation> islands = new ArrayList<CGaimPopulation>();
+	
 	private static int randInt(int min, int max) {
 
 		if (max < min) {
@@ -22,6 +26,7 @@ public class CGaimMain {
 
     	final int numberCities = 1000;
     	final int mapBoundaries = 10000;
+    	final int numberIslands = 3;
     	
         // Create and add our cities
     	int x, y;
@@ -35,21 +40,31 @@ public class CGaimMain {
             CGaimDestinationPool.addCity(city);    		
     	}
 
- 
+    	
         // Initialize population
         CGaimPopulation pop = new CGaimPopulation(100, true);
         System.out.println("Initial distance: " + pop.getFittest().getDistance());
-
+        
         int bestFitness = 999999;
         int counter = 1;
-        // Evolve population for 100 generations
-        pop = CGaim.evolvePopulation(pop);        
+        
+        /* populate islands */
+        for(int i = 0; i < numberIslands; i++)
+        {
+        	CGaim island = new CGaim();
+        }
+        
+        
+        
+        CGaim island = new CGaim(); 
+        
+        pop = island.evolvePopulation(pop);        
         while(bestFitness > 900)
         {
-            pop = CGaim.evolvePopulation(pop);
+            pop = island.evolvePopulation(pop);
             bestFitness = pop.getFittest().getDistance();
             
-            if(counter%5 == 0)
+            if(counter%10 == 0)
             	System.out.println("Best Fitness at Generation: " + counter + " is \t" +  bestFitness);
             counter++;
         }
