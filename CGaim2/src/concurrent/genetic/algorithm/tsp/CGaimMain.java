@@ -5,6 +5,7 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,16 +29,16 @@ public class CGaimMain {
 		return result;
 	}
 	
-    public static void main(String[] args) throws InterruptedException, BrokenBarrierException, TimeoutException {
+    public static void main(String[] args) throws InterruptedException, BrokenBarrierException, TimeoutException, IOException {
     	
     	System.out.println("-- Genetic Algorithm with Island Migration -- \n");
     	
-    	final int numberCities = 70;
+    	final int numberCities = 20;
     	final int mapBoundaries = 120;
     	final int numberIslands = 5;
-    	final int nMigrants = 1;
-    	final int popSize = 200; // for each island
-    	final int epochL = 100;
+    	final int nMigrants = 0;
+    	final int popSize = 10; // for each island
+    	final int epochL = 1;
     	final int stopCriterion = 200;
     	
     	
@@ -126,6 +127,13 @@ public class CGaimMain {
 
         	System.out.print("\n\n");
     		
+        	System.in.read();
+        	
+            System.out.println("Final distance: " + islands.get(bestIsland-1).getPopulation().getFittest().getDistance());
+
+            System.out.println("Best estimated Solution:");
+            System.out.println(islands.get(bestIsland-1).getPopulation().getFittest());
+        	
 	        /* perform island migration (as mentioned in the paper: cyclic) */
 	        for(int i = 0; i < numberIslands; i++)
 	        {
