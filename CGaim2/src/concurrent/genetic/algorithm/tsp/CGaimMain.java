@@ -28,8 +28,8 @@ public class CGaimMain {
     	final int numberCities = 1000;
     	final int mapBoundaries = 10000;
     	final int numberIslands = 5;
-    	final int nMigrants = 5;
-    	final int popSize = 90; // for each island
+    	final int nMigrants = 3;
+    	final int popSize = 150; // for each island
     	final int epochL = 70;
     	
     	List<CGaimIsland> islands = new ArrayList<CGaimIsland>();
@@ -62,6 +62,15 @@ public class CGaimMain {
         	threads.add(t);
         	
         }
+        
+        System.out.println("Initialized with: ");
+        System.out.println(" \t " + numberIslands + " Islands");
+        System.out.println(" \t " + popSize + " Individuals ea island");
+        System.out.println(" \t " + numberCities + " Cities");
+        System.out.println(" \t " + mapBoundaries + "x" + mapBoundaries + " Map \n");
+        
+
+        System.out.println("Genetic Algorithm starts to evolve...");
         
         double bestFitness = Double.MAX_VALUE;
         int bestIsland = 0;
@@ -101,7 +110,7 @@ public class CGaimMain {
 	        	}
 	        }
 	        
-    		System.out.println("Best Fitness Island " + bestIsland + " - " + bestFitness);
+    		System.out.println("\tBest Fitness Island " + bestIsland + " - " + bestFitness);
 	        
 	        /* perform island migration (as mentioned in the paper: cyclic) */
 	        for(int i = 0; i < numberIslands; i++)
