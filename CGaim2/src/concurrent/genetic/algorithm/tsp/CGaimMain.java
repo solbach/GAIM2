@@ -118,14 +118,14 @@ public class CGaimMain {
 	        	}
 	        }
 	        
-    		System.out.println("\tBest Fitness Island " + bestIsland + " - Gen.: " + islands.get(bestIsland-1).getCurrentGeneration());
+    		System.out.print("\tBest Fitness Island " + bestIsland + " - Gen.: " + islands.get(bestIsland-1).getCurrentGeneration() + "\n");
     		
 	        for(int i = 0; i < numberIslands; i++)
 	        {
 	        	System.out.print("\t" + islands.get(i).bestFitness() + " ");
 	        }
-	        
-        	System.out.println("\n");
+
+        	System.out.print("\n\n");
     		
 	        /* perform island migration (as mentioned in the paper: cyclic) */
 	        for(int i = 0; i < numberIslands; i++)
