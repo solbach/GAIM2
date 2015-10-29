@@ -61,19 +61,18 @@ public class CGaimPopulation {
     }
     
     // Get Tours which are used to Migrate
-    /* The strategy is to choose the best individual
-     * and n random chosen ones. Since we initialized everything
+    /* The strategy is to choose n random individuals. Since we initialized everything
      * randomly we can just pick the first n */
     public CGaimConnection[] getMigrants(int nMigrants) {
     	
     	CGaimConnection[] migrants;
     	migrants = new CGaimConnection[nMigrants];
     	
-    	migrants[0] = connections.clone()[getFittestIndex()];
+    	//migrants[0] = connections.clone()[getFittestIndex()];
         
 //        printConnections(connections);
             	
-        for (int i = 1; i < nMigrants; i++) {
+        for (int i = 0; i < nMigrants; i++) {
             /* Make sure that you clone the element */
             migrants[i] = connections.clone()[i];
         }
