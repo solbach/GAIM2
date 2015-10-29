@@ -16,8 +16,8 @@ public class CGaimMain {
 		}
 
 		int result = ThreadLocalRandom.current().nextInt((max - min) + 1) + min;
-//		System.out.println(min +"/"+ max + " - " + result);
-		
+		// System.out.println(min +"/"+ max + " - " + result);
+
 		return result;
 	}
 	
@@ -25,14 +25,16 @@ public class CGaimMain {
     	
     	final int numberCities = 1000;
     	final int mapBoundaries = 10000;
-    	final int numberIslands = 4;
+    	final int numberIslands = 2;
     	final int nMigrants = 3;
     	final int popSize = 50; // for each island
-    	final int epochL = 100;
+    	final int epochL = 70;
     	
     	List<CGaimIsland> islands = new ArrayList<CGaimIsland>();
-        CGaimDestinationPool pool = new CGaimDestinationPool(); 
+    	List<Thread> threads = new ArrayList<Thread>();
     	
+        CGaimDestinationPool pool = new CGaimDestinationPool(); 
+        
         // Create and add our cities
     	int x, y;
     	for(int i = 0; i < numberCities; i++)
@@ -47,25 +49,44 @@ public class CGaimMain {
             pool.addCity(city);
     	}
 
-        /* Create Islands */
+        /* Create Islands and Threads */
         for(int i = 0; i < numberIslands; i++)
         {
         	CGaimIsland island = new CGaimIsland(pool, nMigrants, popSize, epochL, i+1);
         	islands.add(island);
+
+        	/* create thread and associate it with an island */
+        	Thread t = new Thread(island);
+        	threads.add(t);
+        	
         }
         
         /* Start the Threads */
         for(int i = 0; i < numberIslands; i++)
         { 
-        	//islands.get(i).start(); 
+        	/* Using one Thread */
         	
-//        	islands.get(i).init();
-//        	islands.get(i).evolve();
-        	
-        	Thread t = new Thread(islands.get(i));
-        	t.start();
+//        	 islands.get(i).init();
+//        	 islands.get(i).evolve();
+
+        	/* Using Threads */
+        	threads.get(i).start();        	
         } 
         
+        /* Wait for Threads */
+        for(int i = 0; i < numberIslands; i++)
+        { 
+	    	try {
+				threads.get(i).join();
+			} catch (InterruptedException e) {
+				
+				e.printStackTrace();
+			}
+        }
+        
+        
+        
+        System.out.println("GOOD NIGHT");
         
 //        int bestFitness = 999999;
 //        int counter = 1;

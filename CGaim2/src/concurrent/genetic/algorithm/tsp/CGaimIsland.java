@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CGaimIsland implements Runnable {
-	
-	private Thread t;
-	
+		
 	boolean initialized = false;
 	
 	private CGaimDestinationPool pool;
@@ -65,13 +63,25 @@ public class CGaimIsland implements Runnable {
 		
 		System.out.println("Island " + this.id + ": " + bestFitness);
 		
+		
 		return evolved;
 	}
 	
-	public void migration()
+	public CGaimConnection[] getMigrants()
 	{
-		
+		CGaimConnection[] migrants;
+    	migrants = new CGaimConnection[numberMigrants];
+    	migrants = population.getMigrants(numberMigrants);
+    	
+    	/* Return a clone of the object to avoid shared memory access */    	
+    	return migrants.clone();
 	}
+	
+	public void setMigrants(CGaimConnection migrants[])
+	{
+		population.setMigrants(migrants.clone());
+	}
+	
 
 	@Override
 	public void run() {
