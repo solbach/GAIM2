@@ -25,8 +25,8 @@ public class CGaimMain {
     	
     	System.out.println("-- Genetic Algorithm with Island Migration -- \n");
     	
-    	final int numberCities = 1000;
-    	final int mapBoundaries = 10000;
+    	final int numberCities = 10;
+    	final int mapBoundaries = 100;
     	final int numberIslands = 5;
     	final int nMigrants = 3;
     	final int popSize = 150; // for each island
@@ -40,8 +40,7 @@ public class CGaimMain {
         // Create and add our cities
     	int x, y;
     	for(int i = 0; i < numberCities; i++)
-    	{
-    		
+    	{    		
     		x = randInt(0, mapBoundaries);
     		y = randInt(0, mapBoundaries);
     		
