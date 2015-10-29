@@ -1,6 +1,10 @@
 package concurrent.genetic.algorithm.tsp;
 
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +25,7 @@ public class CGaimMain {
 		return result;
 	}
 	
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException, BrokenBarrierException, TimeoutException {
     	
     	System.out.println("-- Genetic Algorithm with Island Migration -- \n");
     	
@@ -36,6 +40,11 @@ public class CGaimMain {
     	List<Thread> threads = new ArrayList<Thread>();
     	
         CGaimDestinationPool pool = new CGaimDestinationPool(); 
+        
+        /* create an cyclic barrier to make sure that all threads 
+         * start at exactly the same time */
+        /* This Barrier will wait until all threads (numberIslands) are ready */
+        final CyclicBarrier barrier = new CyclicBarrier(numberIslands+1);
         
         // Create and add our cities
     	int x, y;
@@ -53,23 +62,23 @@ public class CGaimMain {
         /* Create Islands and Threads */
         for(int i = 0; i < numberIslands; i++)
         {
-        	CGaimIsland island = new CGaimIsland(pool, nMigrants, popSize, epochL, i+1);
+        	CGaimIsland island = new CGaimIsland(pool, nMigrants, popSize, epochL, i+1, barrier);
         	islands.add(island);
 
         	/* create thread and associate it with an island */
         	Thread t = new Thread(island);
+        	
         	threads.add(t);
         	
         }
         
         System.out.println("Initialized with: ");
-        System.out.println(" \t " + numberIslands + " Islands");
+        System.out.println(" \t " + numberIslands + " Islands / Threads");
         System.out.println(" \t " + popSize + " Individuals ea island");
         System.out.println(" \t " + numberCities + " Cities");
         System.out.println(" \t " + mapBoundaries + "x" + mapBoundaries + " Map \n");
         
-
-        System.out.println("Genetic Algorithm starts to evolve...");
+        System.out.println("Threads are waiting at the cyclic barrier \n");        
         
         double bestFitness = Double.MAX_VALUE;
         int bestIsland = 0;
@@ -78,16 +87,21 @@ public class CGaimMain {
         {
 	        /* Start the Threads */
 	        for(int i = 0; i < numberIslands; i++)
-	        { 
-	        	/* Using one Thread */
-
-//	     	    islands.get(i).init();
-//	        	islands.get(i).evolve();
-	
+	        { 	
 	        	/* Using Threads */
 	        	threads.get(i).start();        	
 	        } 
-   
+	        
+	        if(barrier.getNumberWaiting() < numberIslands)
+	        {
+	        	System.err.println(barrier.getNumberWaiting() - numberIslands + " Threads are not at barrier.");
+	        }
+	        
+	        barrier.await(5, TimeUnit.MILLISECONDS);
+	        
+	        System.out.println("Threads passed the cyclic barrier \n");      
+	        System.out.println("Genetic Algorithm evolves...");
+	        
 	        /* Wait for Threads */
 	        for(int i = 0; i < numberIslands; i++)
 	        { 

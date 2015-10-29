@@ -2,6 +2,8 @@ package concurrent.genetic.algorithm.tsp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
 public class CGaimIsland implements Runnable {
 		
@@ -17,15 +19,18 @@ public class CGaimIsland implements Runnable {
 	private int popSize = 0;
 	private int epochL = 0;
 	private int id = 0;
+
+    private CyclicBarrier barrier;
 	
-	
-	public CGaimIsland(CGaimDestinationPool pool, int nMigrants, int popSize, int epochL, int id)
+	public CGaimIsland(CGaimDestinationPool pool, int nMigrants, int popSize, int epochL, 
+					   int id, CyclicBarrier barrier)
 	{
 		this.pool = pool;
 		this.numberMigrants = nMigrants;
 		this.popSize = popSize;
 		this.epochL = epochL;
 		this.id = id;
+		this.barrier = barrier;
 	}
 	
 	public void init()
@@ -100,15 +105,24 @@ public class CGaimIsland implements Runnable {
 
 	@Override
 	public void run() {
-		/* If the Island is not already initialized - do it */
-		if(this.initialized == false)
-		{
-			this.init();
+		
+		try {
+			barrier.await();
+			/* If the Island is not already initialized - do it */
+			if (this.initialized == false) {
+				this.init();
+			}
+
+			/* evolve */
+			// System.out.println("Island " + this.id + " evolves");
+			this.evolve();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BrokenBarrierException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		/* evolve */
-//		System.out.println("Island " + this.id + " evolves");
-		this.evolve();
-		
+
 	}
 }
