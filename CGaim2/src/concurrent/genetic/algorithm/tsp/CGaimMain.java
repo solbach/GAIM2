@@ -10,6 +10,9 @@ import java.util.List;
 
 public class CGaimMain {
 	
+
+	static List<CGaimIsland> islands = new ArrayList<CGaimIsland>();
+	static List<Thread> threads = new ArrayList<Thread>();
 	
 	private static int randInt(int min, int max) {
 
@@ -37,8 +40,6 @@ public class CGaimMain {
     	final int epochL = 100;
     	final int stopCriterion = 200;
     	
-    	List<CGaimIsland> islands = new ArrayList<CGaimIsland>();
-    	List<Thread> threads = new ArrayList<Thread>();
     	
         CGaimDestinationPool pool = new CGaimDestinationPool(); 
         
@@ -46,8 +47,6 @@ public class CGaimMain {
          * start at exactly the same time */
         /* This Barrier will wait until all threads (numberIslands) are ready */
         final CyclicBarrier barrier = new CyclicBarrier(numberIslands);
-        /* Max Waiting Time for Barriers in Milliseconds */
-        final int timeOut = 2000;
         
         // Create and add our cities
     	int x, y;
