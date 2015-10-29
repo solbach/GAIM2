@@ -60,11 +60,12 @@ public class CGaimIsland implements Runnable {
 		}
 		
 		this.bestFitness = population.getFittest().getDistance();
-		
-		System.out.println("Island " + this.id + ": " + bestFitness);
-		
-		
 		return evolved;
+	}
+	
+	public int bestFitness()
+	{
+		return population.getFittest().getDistance();		
 	}
 	
 	public CGaimConnection[] getMigrants()
