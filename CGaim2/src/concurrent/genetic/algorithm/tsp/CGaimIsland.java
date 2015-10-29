@@ -59,7 +59,6 @@ public class CGaimIsland implements Runnable {
 			//System.err.println(e.getMessage());
 		}
 		
-		this.bestFitness = population.getFittest().getDistance();
 		return evolved;
 	}
 	
@@ -85,6 +84,8 @@ public class CGaimIsland implements Runnable {
 	{
     	/* Update population size - its shrinked after migration */
     	this.popSize = this.population.populationSize();
+    	
+    	System.err.println(this.popSize);
     	
 		population.setMigrants(migrants.clone());
 	}

@@ -25,8 +25,8 @@ public class CGaimMain {
     	
     	final int numberCities = 1000;
     	final int mapBoundaries = 10000;
-    	final int numberIslands = 1;
-    	final int nMigrants = 5;
+    	final int numberIslands = 2;
+    	final int nMigrants = 3;
     	final int popSize = 50; // for each island
     	final int epochL = 70;
     	
@@ -70,23 +70,23 @@ public class CGaimMain {
 	        for(int i = 0; i < numberIslands; i++)
 	        { 
 	        	/* Using one Thread */
-	        	
-	//        	 islands.get(i).init();
-	//        	 islands.get(i).evolve();
+
+	     	    islands.get(i).init();
+	        	islands.get(i).evolve();
 	
 	        	/* Using Threads */
-	        	threads.get(i).start();        	
+//	        	threads.get(i).start();        	
 	        } 
    
 	        /* Wait for Threads */
 	        for(int i = 0; i < numberIslands; i++)
 	        { 
-		    	try {
-					threads.get(i).join();
-				} catch (InterruptedException e) {
-					
-					e.printStackTrace();
-				}
+//		    	try {
+//					threads.get(i).join();
+//				} catch (InterruptedException e) {
+//					
+//					e.printStackTrace();
+//				}
 	        }
 	        
 	        /* check best individual on each island */
@@ -101,14 +101,14 @@ public class CGaimMain {
 	        
     		System.out.println("Best Fitness Island " + bestIsland + " - " + bestFitness);
 	        
-//	        /* perform island migration (as mentioned in the paper: cyclic) */
+	        /* perform island migration (as mentioned in the paper: cyclic) */
 //	        for(int i = 0; i < numberIslands; i++)
 //	        {
 //	        	/* get migrants from ith Island */
 //	            CGaimConnection[] migrants =  islands.get(i).getMigrants();
 //	            
 //	            /* set migrants on ith Island or 0 Island*/
-//	            if(i < numberIslands - 1)
+//	            if(i < numberIslands-1)
 //	            {
 //	            	islands.get(i+1).setMigrants(migrants.clone());
 //	            }else{
@@ -117,6 +117,15 @@ public class CGaimMain {
 //	            
 //	        }
         	
+        	/* get migrants from ith Island */
+            CGaimConnection[] migrants =  islands.get(0).getMigrants();
+
+            CGaimConnection[] migrants2 =  islands.get(1).getMigrants();
+            
+            /* set migrants on ith Island or 0 Island*/
+            	islands.get(1).setMigrants(migrants.clone());
+            	islands.get(0).setMigrants(migrants2.clone());
+    		
     		/* prepare for next round */
     		threads.clear();
     		for(int i = 0; i < numberIslands; i++)
@@ -126,7 +135,7 @@ public class CGaimMain {
             	threads.add(t);
     		}
     		
-        	System.exit(0);
+//        	System.exit(0);
         }
         
         

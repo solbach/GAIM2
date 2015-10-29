@@ -71,7 +71,9 @@ public class CGaimPopulation {
     	migrants[0] = connections.clone()[getFittestIndex()];
 
         connections = removeElement(connections, getFittestIndex());
-    	
+        
+        printConnections(connections);
+        
     	migrants[0].generateIndividual();
     	
         for (int i = 1; i < nMigrants; i++) {
@@ -85,6 +87,16 @@ public class CGaimPopulation {
         
         return migrants;
     }
+
+    
+    
+	private void printConnections(CGaimConnection[] c) 
+	{
+		for(int i = 0; i < c.length; i++)
+		{
+			System.out.println(c[i]);
+		}
+	}
 
 	private CGaimConnection[] removeElement(CGaimConnection[] c, int index) 
 	{
@@ -103,11 +115,20 @@ public class CGaimPopulation {
 
 	public void setMigrants(CGaimConnection[] migrants) 
 	{
+		CGaimConnection[] n = new CGaimConnection[connections.length + migrants.length];
+				
+		System.err.println("BEFORE:" + connections.length);
 		/* add migrants at the end of the connection array  */
 		for(int i = 0; i < migrants.length; i++)
 		{
-			connections = addElement(connections, migrants[i]);
+			n = addElement(connections, migrants[i]);
 		}
+		System.err.println("AFTER:" + connections.length);
+		
+		connections = new CGaimConnection[n.length];
+		
+		connections = n.clone();
+		
 	}
 	
 	
