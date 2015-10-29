@@ -80,9 +80,7 @@ public class CGaimPopulation {
             migrants[i] = connections.clone()[index];
             
             /* And delete them from the island */
-            System.out.println("BEFORE: " + connections.length);
             connections = removeElement(connections, index);
-            System.out.println("AFTER: " + connections.length);
         }
         
         return migrants;
@@ -106,9 +104,27 @@ public class CGaimPopulation {
 	public void setMigrants(CGaimConnection[] migrants) 
 	{
 		/* add migrants at the end of the connection array  */
+		for(int i = 0; i < migrants.length; i++)
+		{
+			connections = addElement(connections, migrants[i]);
+		}
 	}
 	
 	
+	private CGaimConnection[] addElement(CGaimConnection[] c, CGaimConnection element) {
+
+		CGaimConnection[] n = new CGaimConnection[c.length + 1];
+
+		for(int i = 0; i < c.length; i++)
+		{
+			n[i] = c[i];
+		}
+		
+		n[c.length] = element;
+
+		return n;
+	}
+
 	private static int randInt(int min, int max) {
 
 		if (max < min) {

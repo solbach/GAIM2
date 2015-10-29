@@ -84,7 +84,17 @@ public class CGaimMain {
 			}
         }
         
+        /* perform island migration (as mentioned in the paper*/
         
+        
+        
+        islands.get(1).printPopSize();
+        CGaimConnection[] migrants =  islands.get(1).getMigrants();
+        islands.get(1).printPopSize();
+         
+         
+        islands.get(1).setMigrants(migrants);
+         
         
         System.out.println("GOOD NIGHT");
         

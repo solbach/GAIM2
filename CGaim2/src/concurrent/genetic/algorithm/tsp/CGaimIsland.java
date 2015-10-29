@@ -73,13 +73,24 @@ public class CGaimIsland implements Runnable {
     	migrants = new CGaimConnection[numberMigrants];
     	migrants = population.getMigrants(numberMigrants);
     	
+    	/* Update population size - its shrinked after migration */
+    	this.popSize = this.population.populationSize();
+    	
     	/* Return a clone of the object to avoid shared memory access */    	
     	return migrants.clone();
 	}
 	
 	public void setMigrants(CGaimConnection migrants[])
 	{
+    	/* Update population size - its shrinked after migration */
+    	this.popSize = this.population.populationSize();
+    	
 		population.setMigrants(migrants.clone());
+	}
+	
+	public void printPopSize()
+	{
+		System.out.println("ID: " + this.id + " " + this.population.populationSize());
 	}
 	
 
