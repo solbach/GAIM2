@@ -62,27 +62,20 @@ public class CGaimPopulation {
     
     // Get Tours which are used to Migrate
     /* The strategy is to choose the best individual
-     * and n random chosen ones */
+     * and n random chosen ones. Since we initialized everything
+     * randomly we can just pick the first n */
     public CGaimConnection[] getMigrants(int nMigrants) {
     	
     	CGaimConnection[] migrants;
     	migrants = new CGaimConnection[nMigrants];
     	
     	migrants[0] = connections.clone()[getFittestIndex()];
-
-        connections = removeElement(connections, getFittestIndex());
         
-        printConnections(connections);
-        
-    	migrants[0].generateIndividual();
-    	
+//        printConnections(connections);
+            	
         for (int i = 1; i < nMigrants; i++) {
-            int index = randInt(0, populationSize());
             /* Make sure that you clone the element */
-            migrants[i] = connections.clone()[index];
-            
-            /* And delete them from the island */
-            connections = removeElement(connections, index);
+            migrants[i] = connections.clone()[i];
         }
         
         return migrants;
@@ -118,34 +111,15 @@ public class CGaimPopulation {
 		CGaimConnection[] n = new CGaimConnection[connections.length + migrants.length];
 				
 		System.err.println("BEFORE:" + connections.length);
-		/* add migrants at the end of the connection array  */
+		/* add migrants at the beginning of the connection array  */
 		for(int i = 0; i < migrants.length; i++)
 		{
-			n = addElement(connections, migrants[i]);
+			connections[i] = migrants.clone()[i];
 		}
 		System.err.println("AFTER:" + connections.length);
 		
-		connections = new CGaimConnection[n.length];
-		
-		connections = n.clone();
-		
 	}
 	
-	
-	private CGaimConnection[] addElement(CGaimConnection[] c, CGaimConnection element) {
-
-		CGaimConnection[] n = new CGaimConnection[c.length + 1];
-
-		for(int i = 0; i < c.length; i++)
-		{
-			n[i] = c[i];
-		}
-		
-		n[c.length] = element;
-
-		return n;
-	}
-
 	private static int randInt(int min, int max) {
 
 		if (max < min) {
