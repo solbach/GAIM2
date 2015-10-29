@@ -6,7 +6,6 @@ import java.util.List;
 
 public class CGaimMain {
 	
-	private List<CGaimPopulation> islands = new ArrayList<CGaimPopulation>();
 	
 	private static int randInt(int min, int max) {
 
@@ -23,10 +22,16 @@ public class CGaimMain {
 	}
 	
     public static void main(String[] args) {
-
+    	
     	final int numberCities = 1000;
     	final int mapBoundaries = 10000;
-    	final int numberIslands = 3;
+    	final int numberIslands = 4;
+    	final int nMigrants = 3;
+    	final int popSize = 50; // for each island
+    	final int epochL = 100;
+    	
+    	List<CGaimIsland> islands = new ArrayList<CGaimIsland>();
+        CGaimDestinationPool pool = new CGaimDestinationPool(); 
     	
         // Create and add our cities
     	int x, y;
@@ -35,44 +40,58 @@ public class CGaimMain {
     		
     		x = randInt(0, mapBoundaries);
     		y = randInt(0, mapBoundaries);
-    				
-            CGaimDestination city = new CGaimDestination(x, y);
-            CGaimDestinationPool.addCity(city);    		
+    		
+    		/* Destinations class is static, because it will not change
+    		 * and is for every island at every time the same */
+            CGaimDestination city = new CGaimDestination(x, y);   	
+            pool.addCity(city);
     	}
 
-    	
-        // Initialize population
-        CGaimPopulation pop = new CGaimPopulation(100, true);
-        System.out.println("Initial distance: " + pop.getFittest().getDistance());
-        
-        int bestFitness = 999999;
-        int counter = 1;
-        
-        /* populate islands */
+        /* Create Islands */
         for(int i = 0; i < numberIslands; i++)
         {
-        	CGaim island = new CGaim();
+        	CGaimIsland island = new CGaimIsland(nMigrants, popSize, epochL, i+1);
+        	islands.add(island);
         }
         
-        
-        
-        CGaim island = new CGaim(); 
-        
-        pop = island.evolvePopulation(pop);        
-        while(bestFitness > 900)
+        /* Initialize Islands */
+        for(int i = 0; i < numberIslands; i++)
         {
-            pop = island.evolvePopulation(pop);
-            bestFitness = pop.getFittest().getDistance();
-            
-            if(counter%10 == 0)
-            	System.out.println("Best Fitness at Generation: " + counter + " is \t" +  bestFitness);
-            counter++;
-        }
+        	islands.get(i).init(pool);
+        } 
+        
+        
+        /* Evolve Islands */
+        for(int i = 0; i < numberIslands; i++)
+        {
+        	islands.get(i).evolve();
+        } 
+        
+        
+        
+        
+        
+        
 
-        // Print final results
-        System.out.println("Finished");
-        System.out.println("Final distance: " + pop.getFittest().getDistance());
-        System.out.println("Solution:");
-        System.out.println(pop.getFittest());
+        System.out.println("GOOD NIGHT");
+//        int bestFitness = 999999;
+//        int counter = 1;
+//        
+//        pop = island.evolvePopulation(pop);        
+//        while(bestFitness > 900)
+//        {
+//            pop = island.evolvePopulation(pop);
+//            bestFitness = pop.getFittest().getDistance();
+//            
+//            if(counter%10 == 0)
+//            	System.out.println("Best Fitness at Generation: " + counter + " is \t" +  bestFitness);
+//            counter++;
+//        }
+//
+//        // Print final results
+//        System.out.println("Finished");
+//        System.out.println("Final distance: " + pop.getFittest().getDistance());
+//        System.out.println("Solution:");
+//        System.out.println(pop.getFittest());
     }
 }
