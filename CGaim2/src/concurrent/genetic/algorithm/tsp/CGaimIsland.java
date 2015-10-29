@@ -63,7 +63,7 @@ public class CGaimIsland implements Runnable {
 		
 		this.bestFitness = population.getFittest().getDistance();
 		
-		System.out.println("Best Fitness on Island: " + this.id + ":" + bestFitness);
+		System.out.println("Island " + this.id + ": " + bestFitness);
 		
 		return evolved;
 	}
@@ -82,15 +82,8 @@ public class CGaimIsland implements Runnable {
 		}
 		
 		/* evolve */
+		System.out.println("Island " + this.id + " evolves");
 		this.evolve();
 		
-	}
-
-	public void start() {
-		System.out.println("Starting Island" + this.id);
-		if (t == null) {
-			t = new Thread (this);
-			t.start();
-		}
 	}
 }

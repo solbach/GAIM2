@@ -57,13 +57,16 @@ public class CGaimMain {
         /* Start the Threads */
         for(int i = 0; i < numberIslands; i++)
         { 
-        	islands.get(i).start();        	
+        	//islands.get(i).start(); 
+        	
+//        	islands.get(i).init();
+//        	islands.get(i).evolve();
+        	
+        	Thread t = new Thread(islands.get(i));
+        	t.start();
         } 
         
         
-        
-
-        System.out.println("GOOD NIGHT");
 //        int bestFitness = 999999;
 //        int counter = 1;
 //        
