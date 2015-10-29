@@ -23,11 +23,13 @@ public class CGaimMain {
 	
     public static void main(String[] args) {
     	
+    	System.out.println("-- Genetic Algorithm with Island Migration -- \n");
+    	
     	final int numberCities = 1000;
     	final int mapBoundaries = 10000;
-    	final int numberIslands = 2;
-    	final int nMigrants = 3;
-    	final int popSize = 50; // for each island
+    	final int numberIslands = 5;
+    	final int nMigrants = 5;
+    	final int popSize = 90; // for each island
     	final int epochL = 70;
     	
     	List<CGaimIsland> islands = new ArrayList<CGaimIsland>();
@@ -71,22 +73,22 @@ public class CGaimMain {
 	        { 
 	        	/* Using one Thread */
 
-	     	    islands.get(i).init();
-	        	islands.get(i).evolve();
+//	     	    islands.get(i).init();
+//	        	islands.get(i).evolve();
 	
 	        	/* Using Threads */
-//	        	threads.get(i).start();        	
+	        	threads.get(i).start();        	
 	        } 
    
 	        /* Wait for Threads */
 	        for(int i = 0; i < numberIslands; i++)
 	        { 
-//		    	try {
-//					threads.get(i).join();
-//				} catch (InterruptedException e) {
-//					
-//					e.printStackTrace();
-//				}
+		    	try {
+					threads.get(i).join();
+				} catch (InterruptedException e) {
+					
+					e.printStackTrace();
+				}
 	        }
 	        
 	        /* check best individual on each island */
@@ -102,29 +104,20 @@ public class CGaimMain {
     		System.out.println("Best Fitness Island " + bestIsland + " - " + bestFitness);
 	        
 	        /* perform island migration (as mentioned in the paper: cyclic) */
-//	        for(int i = 0; i < numberIslands; i++)
-//	        {
-//	        	/* get migrants from ith Island */
-//	            CGaimConnection[] migrants =  islands.get(i).getMigrants();
-//	            
-//	            /* set migrants on ith Island or 0 Island*/
-//	            if(i < numberIslands-1)
-//	            {
-//	            	islands.get(i+1).setMigrants(migrants.clone());
-//	            }else{
-//	            	islands.get(0).setMigrants(migrants.clone());
-//	            }
-//	            
-//	        }
-        	
-        	/* get migrants from ith Island */
-            CGaimConnection[] migrants =  islands.get(0).getMigrants();
-
-            CGaimConnection[] migrants2 =  islands.get(1).getMigrants();
-            
-            /* set migrants on ith Island or 0 Island*/
-            	islands.get(1).setMigrants(migrants.clone());
-            	islands.get(0).setMigrants(migrants2.clone());
+	        for(int i = 0; i < numberIslands; i++)
+	        {
+	        	/* get migrants from ith Island */
+	            CGaimConnection[] migrants =  islands.get(i).getMigrants();
+	            
+	            /* set migrants on ith Island or 0 Island*/
+	            if(i < numberIslands-1)
+	            {
+	            	islands.get(i+1).setMigrants(migrants.clone());
+	            }else{
+	            	islands.get(0).setMigrants(migrants.clone());
+	            }
+	            
+	        }
     		
     		/* prepare for next round */
     		threads.clear();
@@ -134,32 +127,24 @@ public class CGaimMain {
             	Thread t = new Thread(islands.get(i));
             	threads.add(t);
     		}
-    		
-//        	System.exit(0);
         }
         
         
+        /* one last look up */
         
-        System.out.println("GOOD NIGHT");
+        /* check best individual on each island */
+        for(int i = 0; i < numberIslands; i++)
+        {
+        	if(islands.get(i).bestFitness() < bestFitness)
+        	{
+        		bestFitness = islands.get(i).bestFitness();
+        		bestIsland = i + 1;
+        	}
+        }
         
-//        int bestFitness = 999999;
-//        int counter = 1;
-//        
-//        pop = island.evolvePopulation(pop);        
-//        while(bestFitness > 900)
-//        {
-//            pop = island.evolvePopulation(pop);
-//            bestFitness = pop.getFittest().getDistance();
-//            
-//            if(counter%10 == 0)
-//            	System.out.println("Best Fitness at Generation: " + counter + " is \t" +  bestFitness);
-//            counter++;
-//        }
-//
-//        // Print final results
-//        System.out.println("Finished");
-//        System.out.println("Final distance: " + pop.getFittest().getDistance());
-//        System.out.println("Solution:");
-//        System.out.println(pop.getFittest());
+        System.out.println("Final distance: " + islands.get(bestIsland-1).getPopulation().getFittest().getDistance());
+
+        System.out.println("Best estimated Solution:");
+        System.out.println(islands.get(bestIsland-1).getPopulation().getFittest());
     }
 }

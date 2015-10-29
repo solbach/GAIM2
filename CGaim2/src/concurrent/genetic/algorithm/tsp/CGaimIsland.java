@@ -85,8 +85,6 @@ public class CGaimIsland implements Runnable {
     	/* Update population size - its shrinked after migration */
     	this.popSize = this.population.populationSize();
     	
-    	System.err.println(this.popSize);
-    	
 		population.setMigrants(migrants.clone());
 	}
 	
@@ -94,7 +92,11 @@ public class CGaimIsland implements Runnable {
 	{
 		System.out.println("ID: " + this.id + " " + this.population.populationSize());
 	}
-	
+
+	public CGaimPopulation getPopulation()
+	{
+		return this.population;
+	}
 
 	@Override
 	public void run() {
@@ -105,7 +107,7 @@ public class CGaimIsland implements Runnable {
 		}
 		
 		/* evolve */
-		System.out.println("Island " + this.id + " evolves");
+//		System.out.println("Island " + this.id + " evolves");
 		this.evolve();
 		
 	}

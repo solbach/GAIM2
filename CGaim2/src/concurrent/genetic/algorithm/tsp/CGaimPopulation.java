@@ -110,13 +110,11 @@ public class CGaimPopulation {
 	{
 		CGaimConnection[] n = new CGaimConnection[connections.length + migrants.length];
 				
-		System.err.println("BEFORE:" + connections.length);
 		/* add migrants at the beginning of the connection array  */
 		for(int i = 0; i < migrants.length; i++)
 		{
 			connections[i] = migrants.clone()[i];
 		}
-		System.err.println("AFTER:" + connections.length);
 		
 	}
 	
