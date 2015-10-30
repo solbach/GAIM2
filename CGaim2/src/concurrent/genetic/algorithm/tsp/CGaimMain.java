@@ -28,17 +28,17 @@ public class CGaimMain {
 		return result;
 	}
 	
-    public static void main(String[] args) throws InterruptedException, BrokenBarrierException, TimeoutException {
+    public static void main(String[] args) throws InterruptedException, BrokenBarrierException, TimeoutException  {
     	
     	System.out.println("-- Genetic Algorithm with Island Migration -- \n");
     	
     	final int numberCities = 100;
     	final int mapBoundaries = 1000;
     	final int numberIslands = 6;
-    	final int nMigrants = 1;
-    	final int popSize = 150; // for each island
-    	final int epochL = 25;
-    	final int stopCriterion = 200;
+    	final int nMigrants = 2;
+    	final int popSize = 200; // for each island
+    	final int epochL = 90;
+    	final int stopCriterion = 12000;
     	
     	
         CGaimDestinationPool pool = new CGaimDestinationPool(); 
@@ -77,7 +77,8 @@ public class CGaimMain {
         System.out.println(" \t " + numberIslands + " Islands / Threads");
         System.out.println(" \t " + popSize + " Individuals ea island");
         System.out.println(" \t " + numberCities + " Cities");
-        System.out.println(" \t " + mapBoundaries + "x" + mapBoundaries + " Map \n");
+        System.out.println(" \t " + mapBoundaries + "x" + mapBoundaries + " Map");
+        System.out.println(" \t " + stopCriterion + " Fitness Threshold \n");
         
         System.out.println("Threads wait at the cyclic barrier \n");        
 
@@ -116,14 +117,14 @@ public class CGaimMain {
 	        	}
 	        }
 	        
-    		System.out.println(islands.get(bestIsland-1).bestFitness());
-//    		
-//	        for(int i = 0; i < numberIslands; i++)
-//	        {
-//	        	System.out.print("\t" + islands.get(i).bestFitness() + " ");
-//	        }
-//
-//        	System.out.print("\n\n");
+    		System.out.println("\tBest Fitness is on Island " + bestIsland + " - Generation: " + islands.get(bestIsland-1).getCurrentGeneration());
+    		
+	        for(int i = 0; i < numberIslands; i++)
+	        {
+	        	System.out.print("\t" + islands.get(i).bestFitness() + " ");
+	        }
+
+        	System.out.print("\n\n");
     		
 	        /* perform island migration (as mentioned in the paper: cyclic) */
 	        for(int i = 0; i < numberIslands; i++)
