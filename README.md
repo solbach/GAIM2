@@ -18,5 +18,9 @@ Concurrent implementation of the Genetic Algorithm to optimize the travelling sa
 * JDK 1.8 (oracle)
 * Eclipse Mars.1 Release (4.5.1)
 
+## class diagram
+![Class Diagram](/img/class.png?raw=true "Class Diagram")
+
 ## example output
-![Example Plot](/plot.jpg?raw=true "Example Plot")
+![After 1 Generation](/img/g1.png?raw=true "After 1 Generation")
+![After 600 Generation](/img/g600.png?raw=true "After 600 Generation")
