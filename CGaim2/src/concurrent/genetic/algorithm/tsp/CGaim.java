@@ -87,11 +87,11 @@ public class CGaim {
                 // Get a second random position in the tour
                 int tourPos2 = (int) (tour.tourSize() * Math.random());
 
-                // Get the cities at target position in tour
+                // Get the randomly chosen cities
                 CGaimDestination city1 = tour.getCity(tourPos1);
                 CGaimDestination city2 = tour.getCity(tourPos2);
 
-                // Swap them around
+                // Swap them
                 tour.setCity(tourPos2, city1);
                 tour.setCity(tourPos1, city2);
             }

@@ -22,13 +22,13 @@ public class CGaimConnection{
         this.tour = tour;
     }
 
-    // Creates a random individual
+    // create a random individual
     public void generateIndividual() {
-        // Loop through all our destination cities and add them to our tour
+        // Go through all available Cities and add it to the tour
         for (int cityIndex = 0; cityIndex < CGaimDestinationPool.numberOfCities(); cityIndex++) {
           setCity(cityIndex, CGaimDestinationPool.getCity(cityIndex));
         }
-        // Randomly reorder the tour
+        // shuffle the tour
         Collections.shuffle(tour);
     }
 
