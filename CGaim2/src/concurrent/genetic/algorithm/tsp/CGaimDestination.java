@@ -8,13 +8,7 @@ package concurrent.genetic.algorithm.tsp;
 public class CGaimDestination {
     int x;
     int y;
-    
-    // Constructs a randomly placed city
-    public CGaimDestination(){
-        this.x = (int)(Math.random()*1000);
-        this.y = (int)(Math.random()*1000);
-    }
-    
+        
     // Constructs a city at chosen x, y location
     public CGaimDestination(int x, int y){
         this.x = x;

@@ -1,9 +1,11 @@
 package concurrent.genetic.algorithm.tsp;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class CGaim {
 
     /* GA parameters */
-    private  final double mutationRate = 0.015;
+    private  final double mutationRate = 2; // in %
     private  final int tournamentSize = 5;
     private  final boolean elitism = true;
 
@@ -39,14 +41,27 @@ public class CGaim {
         return newPopulation;
     }
 
+	private static int randInt(int min, int max) {
+
+		if (max < min) {
+			int temp = max;
+			max = min;
+			min = temp;
+		}
+
+		int result = ThreadLocalRandom.current().nextInt(min, max + 1);
+
+		return result;
+	}
+    
     // Applies crossover to a set of parents and creates offspring
     public  CGaimConnection crossover(CGaimConnection parent1, CGaimConnection parent2) {
         // Create new child tour
     	CGaimConnection child = new CGaimConnection();
 
         // Get start and end sub tour positions for parent1's tour
-        int startPos = (int) (Math.random() * parent1.tourSize());
-        int endPos = (int) (Math.random() * parent1.tourSize());
+        int startPos = (int) (randInt(0, parent1.tourSize()-1));
+        int endPos = (int) (randInt(0, parent1.tourSize()-1));
 
         // Loop and add the sub tour from parent1 to our child
         for (int i = 0; i < child.tourSize(); i++) {
@@ -83,9 +98,9 @@ public class CGaim {
         // Loop through tour cities
         for(int tourPos1=0; tourPos1 < tour.tourSize(); tourPos1++){
             // Apply mutation rate
-            if(Math.random() < mutationRate){
+            if(randInt(0, 100) < mutationRate){
                 // Get a second random position in the tour
-                int tourPos2 = (int) (tour.tourSize() * Math.random());
+                int tourPos2 = (int) (randInt(0, tour.tourSize()-1));
 
                 // Get the randomly chosen cities
                 CGaimDestination city1 = tour.getCity(tourPos1);
@@ -105,7 +120,7 @@ public class CGaim {
         // For each place in the tournament get a random candidate tour and
         // add it
         for (int i = 0; i < tournamentSize; i++) {
-            int randomId = (int) (Math.random() * pop.populationSize());
+            int randomId = (int) (randInt(0, pop.populationSize()-1));
             tournament.saveTour(i, pop.getTour(randomId));
         }
         // Get the fittest tour
