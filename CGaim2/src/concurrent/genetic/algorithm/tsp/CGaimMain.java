@@ -34,7 +34,7 @@ public class CGaimMain {
     	
     	final int numberCities = 100;
     	final int mapBoundaries = 1000;
-    	final int numberIslands = 10;
+    	final int numberIslands = 7;
     	final int nMigrants = 1;
     	final int popSize = 350; // for each island
     	final int epochL = 90;
