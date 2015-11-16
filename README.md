@@ -1,7 +1,7 @@
 # GAIM2
 Concurrent implementation of the Genetic Algorithm to optimize the travelling salesman problem
 
-# About this Branch
+# about this Branch
 Specifically made for performance testing on _Intel's® Manycore Testing Lab_ (_MTL_). Further Information will follow.
 
 ## usage
