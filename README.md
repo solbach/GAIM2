@@ -2,7 +2,7 @@
 Concurrent implementation of the Genetic Algorithm to optimize the travelling salesman problem
 
 # About this Branch
-Specifically made for performance testing on Intel's® Manycore Testing Lab. Further Information will follow.
+Specifically made for performance testing on _Intel's® Manycore Testing Lab_ (_MTL_). Further Information will follow.
 
 ## usage
 * open in eclipse and enjoy.
