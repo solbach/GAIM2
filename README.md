@@ -1,6 +1,9 @@
 # GAIM2
 Concurrent implementation of the Genetic Algorithm to optimize the travelling salesman problem
 
+# About this Branch
+Specifically made for performance testing on Intel's® Manycore Testing Lab. Further Information will follow.
+
 ## usage
 * open in eclipse and enjoy.
 * entry point is the file _CGaimMain.java_
