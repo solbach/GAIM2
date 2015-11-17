@@ -3,7 +3,6 @@ package concurrent.genetic.algorithm.tsp;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class CGaimMain {
 
@@ -38,14 +36,7 @@ public class CGaimMain {
 		double now = System.nanoTime();
 		java.util.Date date= new java.util.Date();
 		File file = new File("out_" + new Timestamp(date.getTime()) + ".txt");
-		
-		if (!file.exists()) {
-			file.createNewFile();
-		}
-		FileWriter fw = new FileWriter(file.getAbsoluteFile());
-		BufferedWriter bw = new BufferedWriter(fw);
-		
-		bw.write("-- Genetic Algorithm with Island Migration -- \n");
+
 		
 		System.out.println("-- Genetic Algorithm with Island Migration -- \n");
 
@@ -100,13 +91,6 @@ public class CGaimMain {
 		System.out.println(" \t " + mapBoundaries + "x" + mapBoundaries + " Map");
 		System.out.println(" \t " + stopCriterion + " Fitness Threshold \n");
 
-		bw.write("Initialized with: ");
-		bw.write(" \t " + numberIslands + " Islands / Threads");
-		bw.write(" \t " + popSize + " Individuals ea island");
-		bw.write(" \t " + numberCities + " Cities");
-		bw.write(" \t " + mapBoundaries + "x" + mapBoundaries + " Map");
-		bw.write(" \t " + stopCriterion + " Fitness Threshold \n");
-
 		System.out.println("Threads wait at the cyclic barrier \n");
 
 		System.out.println("Genetic Algorithm evolves...");
@@ -138,22 +122,11 @@ public class CGaimMain {
 					+ ") - Generation: "
 					+ islands.get(bestIsland - 1).getCurrentGeneration());
 			
-			bw.write("\tBest Fitness is on Island " + bestIsland + " (" 
-					+ islands.get(bestIsland - 1).bestFitness() 
-					+ ") - Generation: "
-					+ islands.get(bestIsland - 1).getCurrentGeneration());
-
 			for (int i = 0; i < numberIslands; i++) {
 				System.out.print("\t" + islands.get(i).bestFitness() + " ");
-				bw.write("\t" + islands.get(i).bestFitness() + " ");
 			}
 
 			System.out.print("\n\n");
-			bw.write("\n\n");
-			bw.write("Best estimated Solution:");
-			String out = islands.get(bestIsland - 1).getPopulation().getFittest();
-			bw.write(islands.get(bestIsland - 1).getPopulation().getFittest());
-			
 
 			/* perform island migration (as mentioned in the paper: cyclic) */
 			for (int i = 0; i < numberIslands; i++) {
@@ -168,7 +141,6 @@ public class CGaimMain {
 				}
 
 			}
-
 			barrierMigration.reset();
 			barrier.reset();
 		}
@@ -195,7 +167,6 @@ public class CGaimMain {
 
 		System.out.println("Best estimated Solution:");
 		System.out.println(islands.get(bestIsland - 1).getPopulation().getFittest());
-		bw.close();
 		System.exit(0);		
 	}
 }
