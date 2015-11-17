@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.sql.Timestamp;
 
 public class CGaimMain {
@@ -35,8 +37,9 @@ public class CGaimMain {
 		/*Some Performance Testing Utils*/
 		double now = System.nanoTime();
 		java.util.Date date= new java.util.Date();
-		File file = new File("out_" + new Timestamp(date.getTime()) + ".txt");
+		String path = "out_" + new Timestamp(date.getTime()) + ".txt";
 
+		System.setOut(new PrintStream(new FileOutputStream( new File(path)))); 
 		
 		System.out.println("-- Genetic Algorithm with Island Migration -- \n");
 
