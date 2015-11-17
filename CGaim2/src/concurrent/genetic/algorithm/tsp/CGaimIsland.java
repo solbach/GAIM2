@@ -8,6 +8,7 @@ import java.util.concurrent.CyclicBarrier;
 public class CGaimIsland implements Runnable {
 		
 	boolean initialized = false;
+	boolean executeThread = true;
 	
 	private CGaimDestinationPool pool;
 	private CGaimPopulation population;
@@ -20,9 +21,11 @@ public class CGaimIsland implements Runnable {
 	private int id = 0;
 
     private CyclicBarrier barrier;
-	
+    private CyclicBarrier barrierMigration;
+    
+    
 	public CGaimIsland(CGaimDestinationPool pool, int nMigrants, int popSize, int epochL, 
-					   int id, CyclicBarrier barrier)
+					   int id, CyclicBarrier barrier, CyclicBarrier barrierMigration)
 	{
 		this.pool = pool;
 		this.numberMigrants = nMigrants;
@@ -30,6 +33,7 @@ public class CGaimIsland implements Runnable {
 		this.epochL = epochL;
 		this.id = id;
 		this.barrier = barrier;
+		this.barrierMigration = barrierMigration;
 	}
 	
 	public void init()
@@ -101,23 +105,41 @@ public class CGaimIsland implements Runnable {
 		return this.currentGeneration;
 	}
 	
+	public void setExectureThread(boolean val)
+	{
+		this.executeThread = val;
+	}
+	
 	@Override
 	public void run() {
 
-		try {
-			barrier.await();
-		} catch (InterruptedException | BrokenBarrierException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		while(this.executeThread)
+		{			
+			try {
+				barrier.await();
+			} catch (InterruptedException | BrokenBarrierException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+			/* If the Island is not already initialized - do it */
+			if (this.initialized == false) {
+				this.init();
+			}
+	
+			/* evolve */
+			// System.out.println("Island " + this.id + " evolves");
+			this.evolve();
+			
+			try {
+				barrierMigration.await();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (BrokenBarrierException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-
-		/* If the Island is not already initialized - do it */
-		if (this.initialized == false) {
-			this.init();
-		}
-
-		/* evolve */
-		// System.out.println("Island " + this.id + " evolves");
-		this.evolve();
 	}
 }

@@ -37,7 +37,7 @@ public class CGaimMain {
 		final int nMigrants = 1;
 		final int popSize = 350; // for each island
 		final int epochL = 90;
-		final int stopCriterion = 12000;
+		final int stopCriterion = 16000;
 
 		CGaimDestinationPool pool = new CGaimDestinationPool();
 
@@ -47,6 +47,7 @@ public class CGaimMain {
 		 */
 		/* This Barrier will wait until all threads (numberIslands) are ready */
 		final CyclicBarrier barrier = new CyclicBarrier(numberIslands);
+		final CyclicBarrier barrierMigration = new CyclicBarrier(numberIslands+1);
 
 		// Create and add our cities
 		int x, y;
@@ -61,10 +62,10 @@ public class CGaimMain {
 			CGaimDestination city = new CGaimDestination(x, y);
 			pool.addCity(city);
 		}
-
+		
 		/* Create Islands and Threads */
 		for (int i = 0; i < numberIslands; i++) {
-			CGaimIsland island = new CGaimIsland(pool, nMigrants, popSize, epochL, i + 1, barrier);
+			CGaimIsland island = new CGaimIsland(pool, nMigrants, popSize, epochL, i + 1, barrier, barrierMigration);
 			islands.add(island);
 
 			/* create thread and associate it with an island */
@@ -88,23 +89,27 @@ public class CGaimMain {
 		double bestFitness = Double.MAX_VALUE;
 		int bestIsland = 0;
 
+		/* Create the Threads */
+		for (int i = 0; i < numberIslands; i++) {
+			/* Using Threads */
+			threads.get(i).start();
+		}
+		
+		/* Master Loop STARTS HERE */		
 		while (bestFitness > stopCriterion) {
-			/* Start the Threads */
-			for (int i = 0; i < numberIslands; i++) {
-				/* Using Threads */
-				threads.get(i).start();
-			}
 
-			/* Wait for Threads */
-			for (int i = 0; i < numberIslands; i++) {
-				try {
-					threads.get(i).join();
-				} catch (InterruptedException e) {
+//			/* Wait for Threads */
+//			for (int i = 0; i < numberIslands; i++) {
+//				try {
+//					threads.get(i).join();
+//				} catch (InterruptedException e) {
+//
+//					e.printStackTrace();
+//				}
+//			}
 
-					e.printStackTrace();
-				}
-			}
-
+			barrierMigration.await();
+			
 			/* check best individual on each island */
 			for (int i = 0; i < numberIslands; i++) {
 				if (islands.get(i).bestFitness() < bestFitness) {
@@ -136,21 +141,17 @@ public class CGaimMain {
 
 			}
 
-			/* prepare for next round */
-			threads.clear();
-			/*
-			 * reset the barrier to its initial state, so it will wait for until
-			 * it opens for the new threads
-			 */
-			for (int i = 0; i < numberIslands; i++) {
-				/* create thread and associate it with an island */
-				Thread t = new Thread(islands.get(i));
-				threads.add(t);
-			}
+			barrierMigration.reset();
+			barrier.reset();
 		}
+		/* Master Loop ENDS HERE */
 
+		for (int i = 0; i < numberIslands; i++) {
+			/* create thread and associate it with an island */
+			islands.get(i).setExectureThread(false);
+		}
+		
 		/* one last look up */
-
 		/* check best individual on each island */
 		for (int i = 0; i < numberIslands; i++) {
 			if (islands.get(i).bestFitness() < bestFitness) {
@@ -163,5 +164,6 @@ public class CGaimMain {
 
 		System.out.println("Best estimated Solution:");
 		System.out.println(islands.get(bestIsland - 1).getPopulation().getFittest());
+		System.exit(0);		
 	}
 }
