@@ -7,6 +7,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 public class CGaimMain {
 
@@ -27,17 +33,29 @@ public class CGaimMain {
 		return result;
 	}
 
-	public static void main(String[] args) throws InterruptedException, BrokenBarrierException, TimeoutException {
-
+	public static void main(String[] args) throws InterruptedException, BrokenBarrierException, TimeoutException, IOException {
+		/*Some Performance Testing Utils*/
+		double now = System.nanoTime();
+		java.util.Date date= new java.util.Date();
+		File file = new File("out_" + new Timestamp(date.getTime()) + ".txt");
+		
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+		
+		bw.write("-- Genetic Algorithm with Island Migration -- \n");
+		
 		System.out.println("-- Genetic Algorithm with Island Migration -- \n");
 
 		final int numberCities = 100;
 		final int mapBoundaries = 1000;
-		final int numberIslands = 7;
-		final int nMigrants = 1;
-		final int popSize = 350; // for each island
-		final int epochL = 90;
-		final int stopCriterion = 16000;
+		final int numberIslands = 12;
+		final int nMigrants = 5;
+		final int popSize = 500; // for each island
+		final int epochL = 1000;
+		final int stopCriterion = 8000;
 
 		CGaimDestinationPool pool = new CGaimDestinationPool();
 
@@ -82,6 +100,13 @@ public class CGaimMain {
 		System.out.println(" \t " + mapBoundaries + "x" + mapBoundaries + " Map");
 		System.out.println(" \t " + stopCriterion + " Fitness Threshold \n");
 
+		bw.write("Initialized with: ");
+		bw.write(" \t " + numberIslands + " Islands / Threads");
+		bw.write(" \t " + popSize + " Individuals ea island");
+		bw.write(" \t " + numberCities + " Cities");
+		bw.write(" \t " + mapBoundaries + "x" + mapBoundaries + " Map");
+		bw.write(" \t " + stopCriterion + " Fitness Threshold \n");
+
 		System.out.println("Threads wait at the cyclic barrier \n");
 
 		System.out.println("Genetic Algorithm evolves...");
@@ -98,16 +123,6 @@ public class CGaimMain {
 		/* Master Loop STARTS HERE */		
 		while (bestFitness > stopCriterion) {
 
-//			/* Wait for Threads */
-//			for (int i = 0; i < numberIslands; i++) {
-//				try {
-//					threads.get(i).join();
-//				} catch (InterruptedException e) {
-//
-//					e.printStackTrace();
-//				}
-//			}
-
 			barrierMigration.await();
 			
 			/* check best individual on each island */
@@ -118,14 +133,27 @@ public class CGaimMain {
 				}
 			}
 
-			System.out.println("\tBest Fitness is on Island " + bestIsland + " - Generation: "
+			System.out.println("\tBest Fitness is on Island " + bestIsland + " (" 
+					+ islands.get(bestIsland - 1).bestFitness() 
+					+ ") - Generation: "
+					+ islands.get(bestIsland - 1).getCurrentGeneration());
+			
+			bw.write("\tBest Fitness is on Island " + bestIsland + " (" 
+					+ islands.get(bestIsland - 1).bestFitness() 
+					+ ") - Generation: "
 					+ islands.get(bestIsland - 1).getCurrentGeneration());
 
 			for (int i = 0; i < numberIslands; i++) {
 				System.out.print("\t" + islands.get(i).bestFitness() + " ");
+				bw.write("\t" + islands.get(i).bestFitness() + " ");
 			}
 
 			System.out.print("\n\n");
+			bw.write("\n\n");
+			bw.write("Best estimated Solution:");
+			String out = islands.get(bestIsland - 1).getPopulation().getFittest();
+			bw.write(islands.get(bestIsland - 1).getPopulation().getFittest());
+			
 
 			/* perform island migration (as mentioned in the paper: cyclic) */
 			for (int i = 0; i < numberIslands; i++) {
@@ -160,10 +188,14 @@ public class CGaimMain {
 			}
 		}
 
+	    double elapsedSeconds = (System.nanoTime() - now)/1e9; 
+		
 		System.out.println("Final distance: " + islands.get(bestIsland - 1).getPopulation().getFittest().getDistance());
+		System.out.println("Execution Time in sec: " + elapsedSeconds);
 
 		System.out.println("Best estimated Solution:");
 		System.out.println(islands.get(bestIsland - 1).getPopulation().getFittest());
+		bw.close();
 		System.exit(0);		
 	}
 }
