@@ -5,9 +5,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class CGaim {
 
     /* GA parameters */
-    private  final double mutationRate = 2; // in %
-    private  final int tournamentSize = 5;
-    private  final boolean elitism = true;
+    private  final double mutationRate = 2; // 2 in %
+    private  final int tournamentSize = 10; 	// 5
+    private  final boolean elitism = true;	// true
 
     // Evolves a population over one generation
     public  CGaimPopulation evolvePopulation(CGaimPopulation pop) {
