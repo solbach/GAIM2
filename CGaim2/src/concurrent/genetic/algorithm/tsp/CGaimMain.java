@@ -45,7 +45,7 @@ public class CGaimMain {
 
 		final int numberCities = 100;
 		final int mapBoundaries = 1000;
-		final int numberIslands = 12;
+		final int numberIslands = 8;
 		final int nMigrants = 5; // 1%
 		final int popSize = 500; // for each island
 		final int epochL = 1000;
@@ -141,17 +141,20 @@ public class CGaimMain {
 				}
 			}
 
-			outputString += "\tBest Fitness is on Island " + bestIsland + " (" 
-					+ islands.get(bestIsland - 1).bestFitness() 
-					+ ") - Generation: "
-					+ islands.get(bestIsland - 1).getCurrentGeneration();
-			outputString += "\n ";
+//			outputString += "\tBest Fitness is on Island " + bestIsland + " (" 
+//					+ islands.get(bestIsland - 1).bestFitness() 
+//					+ ") - Generation: "
+//					+ islands.get(bestIsland - 1).getCurrentGeneration();
 			
 			for (int i = 0; i < numberIslands; i++) {
-				outputString += "\t" + islands.get(i).bestFitness() + " ";
+				if(i == numberIslands-1)
+				{
+					outputString += islands.get(i).bestFitness();	
+				}
+				else{
+					outputString += islands.get(i).bestFitness() + ",";					
+				}
 			}
-
-			outputString += "\n\n";
 
 			/* perform island migration (as mentioned in the paper: cyclic) */
 			for (int i = 0; i < numberIslands; i++) {
@@ -166,6 +169,8 @@ public class CGaimMain {
 				}
 
 			}
+			System.out.println(outputString);
+			outputString = "";
 			barrierMigration.reset();
 			barrier.reset();
 		}
@@ -191,6 +196,9 @@ public class CGaimMain {
 //		System.out.println("Execution Time in sec: " + elapsedSeconds);
 //		System.out.println("Best estimated Solution:");
 //		System.out.println(islands.get(bestIsland - 1).getPopulation().getFittest());
+	    outputString += "\n########################";
+	    outputString += "\n##### Terminated #######";
+	    outputString += "\n########################\n\n";
 	    outputString += "Final distance: " + islands.get(bestIsland - 1).getPopulation().getFittest().getDistance();
 		outputString += "\n ";
 	    outputString += "Execution Time in sec: " + elapsedSeconds;
