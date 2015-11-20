@@ -116,6 +116,8 @@ public class CGaimIsland implements Runnable {
 		while(this.executeThread)
 		{			
 			try {
+				/* This barrierer is only necessary for the first iteration,
+				 * therefore it doesn't need to be reset */
 				barrier.await();
 			} catch (InterruptedException | BrokenBarrierException e) {
 				// TODO Auto-generated catch block

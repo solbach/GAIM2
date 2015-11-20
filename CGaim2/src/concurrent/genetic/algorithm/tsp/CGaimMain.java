@@ -44,14 +44,15 @@ public class CGaimMain {
 		outputString += "-- Genetic Algorithm with Island Migration -- \n";
 
 		final int numberCities = 100;
-		final int mapBoundaries = 1000;
-		final int numberIslands = 8;
-		final int nMigrants = 5; // 1%
-		final int popSize = 500; // for each island
-		final int epochL = 1000;
-		final int stopCriterion = 8000;
-		final int maxEpochs = 5;
-		int currentEpoch = 0;
+		final int mapBoundaries = 100;
+		final int numberIslands = Integer.parseInt(args[2]); // => Number threads used
+		final int nMigrants = Integer.parseInt(args[1]); // 1%
+		final int popSize = Integer.parseInt(args[0]); // for each island
+		final int epochL = 1;
+		final int realEpochL = 100; // This value stops migration due to epochL. only if a fakeEpochL is reached a migration is executed
+		final int stopCriterion = 800;
+		final int maxEpochs = 500000;
+		int currentEpoch = 0; //This variable works as a counter
 
 		CGaimDestinationPool pool = new CGaimDestinationPool();
 
@@ -88,13 +89,6 @@ public class CGaimMain {
 			threads.add(t);
 
 		}
-
-//		System.out.println("Initialized with: ");
-//		System.out.println(" \t " + numberIslands + " Islands / Threads");
-//		System.out.println(" \t " + popSize + " Individuals ea island");
-//		System.out.println(" \t " + numberCities + " Cities");
-//		System.out.println(" \t " + mapBoundaries + "x" + mapBoundaries + " Map");
-//		System.out.println(" \t " + stopCriterion + " Fitness Threshold \n");
 		
 		outputString += "Initialized with: ";
 		outputString += "\n ";
@@ -107,6 +101,9 @@ public class CGaimMain {
 		outputString += " \t " + mapBoundaries + "x" + mapBoundaries + " Map";
 		outputString += "\n ";
 		outputString += " \t " + stopCriterion + " Fitness Threshold \n";
+		outputString += " \t " + epochL + " Epoch Length \n";
+		outputString += " \t " + realEpochL + " Epoch Length actual\n";
+		outputString += " \t " + nMigrants + " Migrants \n";
 
 		outputString += "Threads wait at the cyclic barrier \n";
 
@@ -140,39 +137,37 @@ public class CGaimMain {
 					bestIsland = i + 1;
 				}
 			}
-
-//			outputString += "\tBest Fitness is on Island " + bestIsland + " (" 
-//					+ islands.get(bestIsland - 1).bestFitness() 
-//					+ ") - Generation: "
-//					+ islands.get(bestIsland - 1).getCurrentGeneration();
 			
 			for (int i = 0; i < numberIslands; i++) {
 				if(i == numberIslands-1)
 				{
-					outputString += islands.get(i).bestFitness();	
+					outputString += islands.get(i).bestFitness();
 				}
 				else{
 					outputString += islands.get(i).bestFitness() + ",";					
 				}
 			}
 
-			/* perform island migration (as mentioned in the paper: cyclic) */
-			for (int i = 0; i < numberIslands; i++) {
-				/* get migrants from ith Island */
-				CGaimConnection[] migrants = islands.get(i).getMigrants();
-
-				/* set migrants on ith Island or 0 Island */
-				if (i < numberIslands - 1) {
-					islands.get(i + 1).setMigrants(migrants.clone());
-				} else {
-					islands.get(0).setMigrants(migrants.clone());
+			if( (currentEpoch % realEpochL) == 0)
+			{
+				/* perform island migration (as mentioned in the paper: cyclic) */
+				for (int i = 0; i < numberIslands; i++) {
+					/* get migrants from ith Island */
+					CGaimConnection[] migrants = islands.get(i).getMigrants();
+	
+					/* set migrants on ith Island or 0 Island */
+					if (i < numberIslands - 1) {
+						islands.get(i + 1).setMigrants(migrants.clone());
+					} else {
+						islands.get(0).setMigrants(migrants.clone());
+					}
+	
 				}
-
 			}
+
+			//barrierMigration.reset();
 			System.out.println(outputString);
 			outputString = "";
-			barrierMigration.reset();
-			barrier.reset();
 		}
 		/* Master Loop ENDS HERE */
 
@@ -192,10 +187,6 @@ public class CGaimMain {
 
 	    double elapsedSeconds = (System.nanoTime() - now)/1e9; 
 		
-//		System.out.println("Final distance: " + islands.get(bestIsland - 1).getPopulation().getFittest().getDistance());
-//		System.out.println("Execution Time in sec: " + elapsedSeconds);
-//		System.out.println("Best estimated Solution:");
-//		System.out.println(islands.get(bestIsland - 1).getPopulation().getFittest());
 	    outputString += "\n########################";
 	    outputString += "\n##### Terminated #######";
 	    outputString += "\n########################\n\n";
