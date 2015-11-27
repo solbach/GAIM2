@@ -45,12 +45,12 @@ public class CGaimMain {
 
 		final int numberCities = 100;
 		final int mapBoundaries = 100;
-		final int numberIslands = Integer.parseInt(args[2]); // => Number threads used
-		final int nMigrants = Integer.parseInt(args[1]); // 1%
-		final int popSize = Integer.parseInt(args[0]); // for each island
-		final int epochL = 1;
-		final int realEpochL = 100; // This value stops migration due to epochL. only if a fakeEpochL is reached a migration is executed
-		final int stopCriterion = 800;
+		final int numberIslands = 1; // => Number threads used
+		final int nMigrants = 0; // 1%
+		final int popSize = 2000; // for each island
+		final int epochL = 100;
+		final int realEpochL = 1; // This value stops migration due to epochL. only if a fakeEpochL is reached a migration is executed
+		final int stopCriterion = 910;
 		final int maxEpochs = 500000;
 		int currentEpoch = 0; //This variable works as a counter
 
